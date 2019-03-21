@@ -10,7 +10,13 @@ export default function List(props){
         </header>
         <div className="List-cards">
           {props.cards.map((item, index)=>
-            <Card key ={index} title ={item.title} content={item.content}/>
+            <Card key ={index} 
+                  id ={item}
+                  title ={item.title} 
+                  content={item.content}
+                  //added a line
+                  onDelete={props.onDelete}
+                  />
           )}
         
         <button type='button' className='randoCard'>+ Add Random Card</button>
