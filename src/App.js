@@ -5,6 +5,16 @@ import store from './store';
 
 class App extends Component {
   
+  newRandomCard = () => {
+    const id = Math.random().toString(36).substring(2, 4)
+      + Math.random().toString(36).substring(2, 4);
+    return {
+      id,
+      title: `Random Card ${id}`,
+      content: 'lorem ipsum',
+    }
+  }
+
     state={
       Store:store,
     }
@@ -15,29 +25,51 @@ class App extends Component {
    }
    */
   //added function below
-   deleteCard =(id) =>{
+
+  deleteCard =(id) =>{
 
     const updatedList = this.state.Store.lists.map(items =>{
       items.cardIds= items.cardIds.filter(itemId=> itemId !== id);
       return items;
     });
+    
       const updatedAllCards = this.state.Store.allCards;
       delete this.state.Store.allCards[id];
-      const updatedAllCards2 = this.state.Store.allCards;
-      console.log(id);
-      console.log(updatedAllCards);
-      console.log(updatedAllCards2);
 
-     
-/*
       this.setState({
           Store:{
             lists: updatedList,
-            updatedAllCards
+            allCards:updatedAllCards
           }
         })
-        */
+        
    };
+
+ 
+
+  addCard =(id) =>{
+    const randoCard = this.newRandomCard();
+
+    const updatedList=this.state.Store.lists.map(i => {
+      if(i.id===id){
+        i.cardIds.push(randoCard.id);
+      }
+      return i;
+    })
+
+    const updatedAllCards = this.state.Store.allCards;
+    updatedAllCards[randoCard.id]={...randoCard};
+
+    this.setState({
+      Store:{
+        lists:updatedList,
+        allCards:updatedAllCards
+      }
+    })
+
+
+
+  }
 
    
 
@@ -53,13 +85,11 @@ class App extends Component {
         <div className='App-list'>
           {store.lists.map((items=> 
           <List key ={items.id} 
-                //added line below
                 id ={items.id}
                 header ={items.header} 
-                cards={items.cardIds.map(itemList=>store.allCards[itemList])}
-                //added this line below
+                cards={items.cardIds.map(id=>({id, ...store.allCards[id]}))}
                 onDelete={this.deleteCard}
-                //onClickAdd={this.addCard}
+                onClickAdd={this.addCard}
                 />
             ))}
         </div>
